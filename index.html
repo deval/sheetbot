@@ -79,7 +79,7 @@
             return intersection.size / union.size;
         }
 
-        function findBestMatch(question, threshold = 0.7) {
+        function findBestMatch(question, threshold = 0.5) {
             let bestMatchAnswer = qaDataset[0].Answer; // Default answer if no match
             let bestMatchQuestion = qaDataset[0].Question; // Similar question if no answer meets threshold
             let highestScore = 0;
