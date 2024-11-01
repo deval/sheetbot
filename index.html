@@ -37,15 +37,49 @@
             });
         }
 
-        function jaccardSimilarity(a, b) {
+        // Levenshtein distance function to measure similarity between two words
+        function levenshteinDistance(word1, word2) {
+            const len1 = word1.length;
+            const len2 = word2.length;
+            const dp = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
+        
+            for (let i = 0; i <= len1; i++) dp[i][0] = i;
+            for (let j = 0; j <= len2; j++) dp[0][j] = j;
+        
+            for (let i = 1; i <= len1; i++) {
+                for (let j = 1; j <= len2; j++) {
+                    const cost = word1[i - 1] === word2[j - 1] ? 0 : 1;
+                    dp[i][j] = Math.min(
+                        dp[i - 1][j] + 1,      // deletion
+                        dp[i][j - 1] + 1,      // insertion
+                        dp[i - 1][j - 1] + cost // substitution
+                    );
+                }
+            }
+        
+            return dp[len1][len2];
+        }
+
+        // sentence similarity
+        function jaccardSimilarity(a, b, typoTolerance = 1) {
             const setA = new Set(a.toLowerCase().split(" "));
             const setB = new Set(b.toLowerCase().split(" "));
-            const intersection = new Set([...setA].filter(x => setB.has(x)));
+            let intersection = new Set();
+        
+            setA.forEach(wordA => {
+                setB.forEach(wordB => {
+                    if (wordA === wordB || levenshteinDistance(wordA, wordB) <= typoTolerance) {
+                        intersection.add(wordA); // Add word if exact match or within typo tolerance
+                    }
+                });
+            });
+        
             const union = new Set([...setA, ...setB]);
+        
             return intersection.size / union.size;
         }
 
-        function findBestMatch(question, threshold = 0.5) {
+        function findBestMatch(question, threshold = 0.7) {
             let bestMatchAnswer = qaDataset[0].Answer; // Default answer if no match
             let bestMatchQuestion = qaDataset[0].Question; // Similar question if no answer meets threshold
             let highestScore = 0;
