@@ -99,7 +99,7 @@
         
             // Return best match answer if it meets the threshold; otherwise, return the similar question
             if (highestScore >= threshold) {
-                consle.log("matching question: " + bestMatchQuestion);
+                console.log("matching question: " + bestMatchQuestion);
                 return bestMatchAnswer;
             } else {
                 return `${qaDataset[0].Answer}, apakah maksud kamu: "${bestMatchQuestion}"?`;
