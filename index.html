@@ -145,7 +145,7 @@
             console.timeEnd("findBestMatchDuration");
         
             // Return best match answer if it meets the threshold; otherwise, return the similar question
-            if (highestScore >= threshold) {
+            if (highestScore >= threshold or highestScore==0) {
                 console.log("matching question: " + bestMatchQuestion);
                 return bestMatchAnswer;
             } else {
