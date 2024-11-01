@@ -45,20 +45,28 @@
             return intersection.size / union.size;
         }
 
-        function findBestMatch(question) {
-            let bestMatch = qaDataset[0].Answer;
+        function findBestMatch(question, threshold = 0.5) {
+            let bestMatchAnswer = qaDataset[0].Answer; // Default answer if no match
+            let bestMatchQuestion = qaDataset[0].Question; // Similar question if no answer meets threshold
             let highestScore = 0;
-
+        
             qaDataset.forEach(entry => {
                 const score = jaccardSimilarity(question, entry.Question);
                 if (score > highestScore) {
                     highestScore = score;
-                    bestMatch = entry.Answer;
+                    bestMatchAnswer = entry.Answer;
+                    bestMatchQuestion = entry.Question;
                 }
             });
-
-            return bestMatch;
+        
+            // Return best match answer if it meets the threshold; otherwise, return the similar question
+            if (highestScore >= threshold) {
+                return bestMatchAnswer;
+            } else {
+                return `${qaDataset[0].Answer}, apakah maksud kamu: "${bestMatchQuestion}"?`;
+            }
         }
+
 
         function addMessageToChatbox(message, sender) {
             const messageElement = `<div><strong>${sender}:</strong> ${message}</div>`;
