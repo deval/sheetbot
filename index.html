@@ -17,19 +17,22 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.6.3/tabletop.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"></script>
+    
     <script>
-        const sheetID = 'https://docs.google.com/spreadsheets/d/1CKub3eujxi0wWRLfjRM6TG4h0BZVaFFQ5zM-3Dla624/edit'; // Replace with your Google Sheet ID
+        const sheetID = 'https://docs.google.com/spreadsheets/d/1CKub3eujxi0wWRLfjRM6TG4h0BZVaFFQ5zM-3Dla624/pub?output=csv'; // Replace with your Google Sheet ID
         let qaDataset = [];
 
         function loadData() {
-            Tabletop.init({
-                key: sheetID,
-                simpleSheet: true,
-                callback: function(data) {
-                    qaDataset = data;
-                    console.log("Data loaded:", qaDataset);
+            Papa.parse(sheetID, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    qaDataset = results.data;
+                    console.log('CSV data loaded:', qaDataset);
+                },
+                error: function(error) {
+                    console.error('Error loading CSV dataset:', error);
                 }
             });
         }
