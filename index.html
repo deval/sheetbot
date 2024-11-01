@@ -83,7 +83,9 @@
             let bestMatchAnswer = qaDataset[0].Answer; // Default answer if no match
             let bestMatchQuestion = qaDataset[0].Question; // Similar question if no answer meets threshold
             let highestScore = 0;
-        
+            
+            console.time("findBestMatchDuration");
+            
             qaDataset.forEach(entry => {
                 const score = jaccardSimilarity(question, entry.Question);
                 if (score > highestScore) {
@@ -92,6 +94,8 @@
                     bestMatchQuestion = entry.Question;
                 }
             });
+
+            console.timeEnd("findBestMatchDuration");
         
             // Return best match answer if it meets the threshold; otherwise, return the similar question
             if (highestScore >= threshold) {
